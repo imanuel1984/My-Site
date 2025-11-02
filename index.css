@@ -1,0 +1,300 @@
+:root{
+  --text:#d9ff01;
+  --muted:#ffffff;
+  --chip-bg: rgba(17, 247, 75, 0.947);
+  --gap:12px;
+  --radius:12px;
+  --card-bg:#0d00ff;
+  --brand:#eeff00;
+
+  /* icon sizing */
+  --icon-badge:40px;   /* outer circle size */
+  --icon-glyph:22px;   /* inside logo size */
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#ffffff;
+  color:var(--text);
+  max-width:880px;
+  margin:0 auto;
+  padding:20px;
+  line-height:1.6;
+}
+
+header, section, footer{
+  background:var(--card-bg);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 2px 6px rgb(255, 255, 255);
+}
+
+h1{ font-size:clamp(26px,4vw,36px); margin:0 0 4px; }
+h2{ margin:0 0 12px; font-size:clamp(18px,2.2vw,22px); color:aqua; }
+p{ margin:0 0 10px; }
+ul{ list-style:none; padding:0; margin:0;}
+li{ margin:6px 0; }
+
+/* ====== YOUR ICON STYLES (UNCHANGED) ====== */
+
+.contact-chip:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 24px rgb(255, 255, 255);
+  background:rgba(15,23,34,0.06);
+}
+
+/* glossy inner highlight for depth */
+.chip-icon::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(120% 120% at 80% -10%, rgba(255,255,255,0.35), transparent 42%);
+  pointer-events:none;
+}
+
+/* hover pop */
+.contact-chip:hover .chip-icon{
+  transform:scale(1.1);
+  box-shadow:0 6px 16px rgba(0,0,0,0.18);
+}
+
+/* Icon hover animations */
+.glyph,
+.chip-icon-img{
+  transform-origin: center;
+  transition: transform .18s ease, filter .18s ease, opacity .18s ease;
+}
+
+/* default hover: badge pops + glows a bit */
+.contact-chip:hover .chip-icon{
+  animation: badge-pop 220ms cubic-bezier(.2,.8,.2,1) both;
+  box-shadow: 0 10px 24px rgb(255, 255, 255), 0 0 0 2px rgba(255,255,255,0.15) inset;
+}
+
+/* tiny, tasteful wiggle on the inner glyph */
+.contact-chip:hover .glyph,
+.contact-chip:hover .chip-icon-img{
+  animation: glyph-wiggle 600ms ease-out 1;
+}
+
+/* soft outward ring pulse */
+.chip-icon::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+}
+.contact-chip:hover .chip-icon::before{
+  animation: ring-pulse 520ms ease-out 1;
+}
+
+/* keyframes */
+@keyframes badge-pop{
+  0%   { transform: scale(.92); }
+  60%  { transform: scale(1.12); }
+  100% { transform: scale(1.06); }
+}
+
+@keyframes glyph-wiggle{
+  0%   { transform: translateY(0) rotate(0deg); }
+  30%  { transform: translateY(-1px) rotate(-8deg); }
+  60%  { transform: translateY(-1px) rotate(7deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes ring-pulse{
+  0%   { opacity:.28; box-shadow: 0 0 0 0 rgba(255,255,255,.28) inset; transform: scale(1); }
+  100% { opacity:0;  box-shadow: 0 0 0 14px rgba(255,255,255,0) inset;   transform: scale(1.25); }
+}
+
+/* optional: per-icon flavor (slightly different glyph motions) */
+.contact-chip:hover .chip-icon.linkedin .glyph { animation-duration: 520ms; }
+.contact-chip:hover .chip-icon.github  .glyph { animation-duration: 680ms; }
+.contact-chip:hover .chip-icon.whatsapp.glyph { animation-duration: 560ms; }
+
+/* accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .contact-chip:hover .chip-icon,
+  .contact-chip:hover .glyph,
+  .contact-chip:hover .chip-icon-img,
+  .contact-chip:hover .chip-icon::before{
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* contact row + chip base (as you had at the bottom) */
+.contact-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--gap);
+  justify-content:flex-start;
+  align-items:center;
+  align-content:flex-start;
+}
+.contact-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  min-height: calc(var(--icon-badge) + 16px);
+}
+.glyph,
+.chip-icon-img{ display:block; }
+.contact-chip:hover .chip-icon.whatsapp .glyph { animation-duration: 560ms; }
+.chip-label{
+  color: rgb(255, 255, 255);
+  font-size:0.95rem;
+  max-width:75vw;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* ====== PRINT ====== */
+@media print{
+  body{ background:white; color:black; }
+  header, section, footer{ box-shadow:none; border:1px solid #ddd; }
+  a::after{ content:" (" attr(href) ")"; }
+}
+
+/* ================== PROJECTS / ARTICLES GRID (CLEAN) ================== */
+
+.projects-grid{
+  display:grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap:16px;
+  align-items:stretch;
+}
+
+/* card */
+.projects-grid > article,
+.projects-grid > article.project-card{
+  grid-column: span 6;
+  background: var(--card-bg);
+  border: 1px solid rgba(15,23,42,.06);
+  border-radius:14px;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.943);
+  overflow: hidden;
+  display:flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.projects-grid > article:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(255, 255, 255, 0.927);
+}
+
+/* media */
+.projects-grid .project-media{
+  position: relative;
+  background: #0f1722;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(15,23,42,.06);
+}
+.projects-grid .project-media video,
+.projects-grid .project-media img,
+.projects-grid .project-media iframe{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: #000;
+  border: 0;
+}
+
+/* aspect-ratio fallback */
+@supports not (aspect-ratio: 16 / 9){
+  .projects-grid .project-media{ height:auto; }
+  .projects-grid .project-media::before{
+    content:"";
+    display:block;
+    padding-top:56.25%;
+  }
+  .projects-grid .project-media > *{
+    position:absolute; inset:0;
+  }
+}
+
+/* content */
+.projects-grid .project-header{ padding:14px 16px 6px; }
+.projects-grid .project-title{ margin:0; font-size:1.05rem; }
+.projects-grid .project-tags{
+  margin:6px 0 0;
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+
+.projects-grid .project-desc{
+  padding:6px 16px 0;
+  color:var(--muted);
+}
+
+/* links row */
+.projects-grid .project-links{
+  display:flex; flex-wrap:wrap; gap:10px;
+  padding:12px 16px 16px;
+  margin-top:auto;
+}
+.projects-grid .project-links a{
+  display:inline-flex; align-items:center; gap:8px;
+  text-decoration:none;
+  color:var(--brand);
+  border:1px solid rgba(10,102,194,.25);
+  padding:6px 10px;
+  border-radius:10px;
+  background: linear-gradient(180deg, rgba(10,102,194,.06), transparent);
+  transition: background .15s ease, color .15s ease, transform .12s ease;
+}
+.projects-grid .project-links a:hover{
+  background: rgb(17, 14, 198);
+  transform: translateY(-2px);
+}
+
+/* reveal (single copy) */
+.projects-grid > article.will-reveal{
+  opacity:0; transform: translateY(10px) scale(.98);
+}
+.projects-grid > article.is-visible{
+  opacity:1; transform: translateY(0) scale(1);
+  transition: opacity .35s ease, transform .35s cubic-bezier(.2,.8,.2,1);
+}
+
+/* responsive */
+@media (max-width: 900px){
+  .projects-grid > article,
+  .projects-grid > article.project-card{
+    grid-column: span 12;
+  }
+}
+@media (max-width: 560px){
+  :root{
+    --icon-badge:36px;
+    --icon-glyph:20px;
+  }
+  body{ padding: 16px; }
+  .contact-row{ gap:10px; }
+  .contact-chip{ padding:7px 10px; gap:10px; }
+  .chip-label{
+    max-width:70vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:0.9rem;
+  }
+  .projects-grid{ gap:12px; }
+  .projects-grid .project-title{ font-size:1rem; }
+}
+
+/* reduced motion (single copy) */
+@media (prefers-reduced-motion: reduce){
+  .projects-grid > article.is-visible{ transition: none; }
+}
+.project-media iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  object-fit: cover;
+}
